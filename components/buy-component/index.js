@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, View, TextInput } from "react-native";
+import { StyleSheet, Text, View, TextInput, Button } from "react-native";
 import Keypad from "./keypad";
 import DeleteButton from "./delete-button";
 import DropdownMenu from "./dropdown-menu";
@@ -135,6 +135,7 @@ const BuyComponent = () => {
           {selectedItem.toUpperCase()}
         </Text>
       </View>
+
       <Keypad handlePress={handlePress} />
       <ConfirmButton handlePress={handleConfirm} />
     </View>

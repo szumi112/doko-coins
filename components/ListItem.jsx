@@ -1,27 +1,23 @@
 import React from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 
-interface Props {
-  name: string;
-  symbol: string;
-  currentPrice: number;
-  priceChangePercentage7d: number;
-  logo: string;
-  onPress: () => void;
-}
-
 const ListItem = ({
   name,
   symbol,
   currentPrice,
   priceChangePercentage7d,
   logo,
+  id,
   onPress,
-}: Props) => {
+}) => {
   const priceChangeColor = priceChangePercentage7d > 0 ? "#34C759" : "#FF3B30";
 
+  const handlePress = () => {
+    onPress();
+  };
+
   return (
-    <TouchableOpacity onPress={onPress}>
+    <TouchableOpacity onPress={handlePress}>
       <View style={styles.itemWrapper}>
         {/* Left side */}
         <View style={styles.leftWrapper}>

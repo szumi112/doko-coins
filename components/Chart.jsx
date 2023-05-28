@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -17,15 +17,6 @@ import { useSharedValue } from "react-native-reanimated";
 
 const { width: SIZE } = Dimensions.get("window");
 
-interface Props {
-  currentPrice: number;
-  logo: string;
-  name: string;
-  symbol: string;
-  priceChangePercentage7d: number;
-  sparkline: [];
-}
-
 const Chart = ({
   currentPrice,
   logo,
@@ -33,9 +24,10 @@ const Chart = ({
   symbol,
   priceChangePercentage7d,
   sparkline,
-}: Props) => {
+}) => {
   const latestCurrentPrice = useSharedValue(currentPrice);
   const [chartReady, setChartReady] = useState(false);
+  const [selectedTimePeriod, setSelectedTimePeriod] = useState("1d");
 
   const priceChangeColor = priceChangePercentage7d > 0 ? "#34C759" : "#FF3B30";
 
@@ -47,7 +39,7 @@ const Chart = ({
     }, 0);
   }, [currentPrice]);
 
-  const formatUSD = (value: any) => {
+  const formatUSD = (value) => {
     "worklet";
     if (value === "") {
       const formattedValue = `$${latestCurrentPrice.value.toLocaleString(
@@ -63,7 +55,7 @@ const Chart = ({
     return formattedValue;
   };
 
-  if (sparkline.length === 0) {
+  if (!sparkline || sparkline.length === 0) {
     return <Text>Loading...</Text>;
   }
 
@@ -81,7 +73,9 @@ const Chart = ({
                 {name} ({symbol.toUpperCase()})
               </Text>
             </View>
-            <Text style={styles.subtitle}>7d</Text>
+            <Text style={styles.subtitle}>
+              {selectedTimePeriod.toUpperCase()}
+            </Text>
           </View>
           <View style={styles.lowerTitles}>
             <ChartYLabel format={formatUSD} style={styles.boldTitle} />
@@ -93,7 +87,12 @@ const Chart = ({
 
         {chartReady ? (
           <View style={styles.chartLineWrapper}>
-            <ChartPath height={SIZE / 2} stroke="black" width={SIZE} />
+            <ChartPath
+              height={SIZE / 2}
+              stroke="black"
+              width={SIZE}
+              strokeWidth={4}
+            />
             <ChartDot style={{ backgroundColor: "black" }} />
           </View>
         ) : null}
