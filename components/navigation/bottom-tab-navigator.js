@@ -5,6 +5,7 @@ import { StyleSheet } from "react-native";
 
 import BuyComponent from "../buy-component/index";
 import Market from "../Market";
+import Home from "../home/home";
 
 const Tab = createBottomTabNavigator();
 
@@ -33,7 +34,7 @@ const BottomTabNavigator = () => {
     >
       <Tab.Screen name="Buy" component={BuyComponent} />
       <Tab.Screen name="Market" component={Market} />
-      <Tab.Screen name="Account" component={BuyComponent} />
+      <Tab.Screen name="Account" component={Home} />
     </Tab.Navigator>
   );
 };

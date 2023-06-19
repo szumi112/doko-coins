@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import { StatusBar } from "expo-status-bar";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   FlatList,
   SafeAreaView,
@@ -14,7 +13,6 @@ import {
   BottomSheetModalProvider,
 } from "@gorhom/bottom-sheet";
 
-import { SAMPLE_DATA } from "../assets/data/sampleData";
 import { useMemo, useRef } from "react";
 import Chart from "./Chart";
 import { getMarketData } from "./services/cryptoService";
@@ -32,6 +30,19 @@ const Market = () => {
   const [data, setData] = useState([]);
   const [selectedCoinData, setSelectedCoinData] = useState(null);
   const [selectedTimePeriod, setSelectedTimePeriod] = useState("1d");
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    const fetchMarketData = async () => {
+      const marketData = await getMarketData();
+      setData(marketData);
+    };
+    fetchMarketData();
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000); // 2sec
+  }, []);
 
   useEffect(() => {
     const fetchMarketData = async () => {
@@ -39,7 +50,7 @@ const Market = () => {
       setData(marketData);
     };
     fetchMarketData();
-  }, []);
+  }, [refreshing]);
 
   const bottomSheetModalRef = useRef(null);
 
@@ -73,6 +84,8 @@ const Market = () => {
             />
           )}
           ListHeaderComponent={<ListHeader />}
+          refreshing={refreshing}
+          onRefresh={onRefresh}
         />
       </SafeAreaView>
       <BottomSheetModal

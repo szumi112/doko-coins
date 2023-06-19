@@ -12,6 +12,35 @@ import {
 const pricesCollectionRef = collection(db, "prices");
 const specificDocumentRef = doc(db, "prices", "tLaJJJXFbkJbP3DGp45a");
 
+// var goldData;
+// var silverData;
+
+// var myHeaders = new Headers();
+// myHeaders.append("x-access-token", "goldapi-uyx7qrlhc414zy-io");
+// myHeaders.append("Content-Type", "application/json");
+
+// var requestOptions = {
+//   method: "GET",
+//   headers: myHeaders,
+//   redirect: "follow",
+// };
+
+// fetch("https://www.goldapi.io/api/XAU/USD", requestOptions)
+//   .then((response) => response.json())
+//   .then((result) => {
+//     goldData = result;
+//     console.log(goldData);
+//   })
+//   .catch((error) => console.log("error", error));
+
+// fetch("https://www.goldapi.io/api/XAG/USD", requestOptions)
+//   .then((response) => response.json())
+//   .then((result) => {
+//     silverData = result;
+//     console.log(silverData);
+//   })
+//   .catch((error) => console.log("error", error));
+
 const formatSparkline = (numbers) => {
   const formattedSparkline = numbers.map((item) => {
     return {
@@ -96,7 +125,16 @@ const formatMarketData = async (data) => {
   return formattedData;
 };
 
-export const getMarketData = async () => {
+let isUpdatingPrices = false;
+
+const getMarketDataInit = async () => {
+  if (isUpdatingPrices) {
+    console.log("Update already in progress");
+    return;
+  }
+
+  isUpdatingPrices = true;
+
   try {
     const response = await axios.get(
       "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=2&page=1&sparkline=true&price_change_percentage=7d"
@@ -107,16 +145,25 @@ export const getMarketData = async () => {
     const updatePrices = async () => {
       try {
         await setDoc(specificDocumentRef, { formattedResponse });
-        console.log("Firebase data updated successfully ");
+        console.log("Firebase updated");
       } catch (e) {
         console.log("Error:", e);
       }
     };
 
-    // update prices
-    setInterval(updatePrices, 5 * 60 * 1000);
+    await updatePrices();
+  } catch (error) {
+    console.log("error: ", error.message);
+  }
 
-    const retrievePrices = async () => {
+  isUpdatingPrices = false;
+};
+
+// setInterval(getMarketDataInit, 30000);
+
+export const getMarketData = async () => {
+  const retrievePrices = async () => {
+    try {
       const data = await getDocs(pricesCollectionRef);
       return data.docs
         .map((doc) => {
@@ -126,11 +173,11 @@ export const getMarketData = async () => {
           }));
         })
         .flat();
-    };
+    } catch (e) {
+      console.log("Error:", e);
+    }
+  };
 
-    const retrievedData = await retrievePrices();
-    return retrievedData;
-  } catch (error) {
-    console.log("error: ", error.message);
-  }
+  const retrievedData = await retrievePrices();
+  return retrievedData;
 };

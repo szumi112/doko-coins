@@ -36,7 +36,7 @@ const Chart = ({
 
     setTimeout(() => {
       setChartReady(true);
-    }, 0);
+    }, 2000);
   }, [currentPrice]);
 
   const formatUSD = (value) => {
