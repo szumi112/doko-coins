@@ -12,6 +12,8 @@ import {
 const pricesCollectionRef = collection(db, "prices");
 const specificDocumentRef = doc(db, "prices", "tLaJJJXFbkJbP3DGp45a");
 
+// test
+
 // var goldData;
 // var silverData;
 
