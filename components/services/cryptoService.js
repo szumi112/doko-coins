@@ -12,37 +12,6 @@ import {
 const pricesCollectionRef = collection(db, "prices");
 const specificDocumentRef = doc(db, "prices", "tLaJJJXFbkJbP3DGp45a");
 
-// test
-
-// var goldData;
-// var silverData;
-
-// var myHeaders = new Headers();
-// myHeaders.append("x-access-token", "goldapi-uyx7qrlhc414zy-io");
-// myHeaders.append("Content-Type", "application/json");
-
-// var requestOptions = {
-//   method: "GET",
-//   headers: myHeaders,
-//   redirect: "follow",
-// };
-
-// fetch("https://www.goldapi.io/api/XAU/USD", requestOptions)
-//   .then((response) => response.json())
-//   .then((result) => {
-//     goldData = result;
-//     console.log(goldData);
-//   })
-//   .catch((error) => console.log("error", error));
-
-// fetch("https://www.goldapi.io/api/XAG/USD", requestOptions)
-//   .then((response) => response.json())
-//   .then((result) => {
-//     silverData = result;
-//     console.log(silverData);
-//   })
-//   .catch((error) => console.log("error", error));
-
 const formatSparkline = (numbers) => {
   const formattedSparkline = numbers.map((item) => {
     return {
@@ -161,7 +130,7 @@ const getMarketDataInit = async () => {
   isUpdatingPrices = false;
 };
 
-// setInterval(getMarketDataInit, 30000);
+setInterval(getMarketDataInit, 100000);
 
 export const getMarketData = async () => {
   const retrievePrices = async () => {
